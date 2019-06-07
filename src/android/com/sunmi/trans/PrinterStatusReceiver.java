@@ -1,4 +1,4 @@
-package com.sunmi.innerprinter;
+package com.sunmi.trans;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
