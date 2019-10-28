@@ -1,24 +1,53 @@
 {
-  "name": "cordova-plugin-sunmi-inner-printer-sunmi-v2",
-  "version": "1.0.3",
-  "description": "Cordova/Ionic Sunmi v2 Inner Printer ",
+  "_from": "git+https://github.com/zhyc9de/cordova-plugin-sunmi-inner-printer.git",
+  "_id": "cordova-plugin-sunmi-inner-printer@1.0.3",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/cordova-plugin-sunmi-inner-printer",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/zhyc9de/cordova-plugin-sunmi-inner-printer.git",
+    "rawSpec": "https://github.com/zhyc9de/cordova-plugin-sunmi-inner-printer.git",
+    "saveSpec": "git+https://github.com/zhyc9de/cordova-plugin-sunmi-inner-printer.git",
+    "fetchSpec": "https://github.com/zhyc9de/cordova-plugin-sunmi-inner-printer.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "git+https://github.com/zhyc9de/cordova-plugin-sunmi-inner-printer.git#e3b8413513f2a354e1a767647ede4527186e2814",
+  "_spec": "https://github.com/zhyc9de/cordova-plugin-sunmi-inner-printer.git",
+  "_where": "D:\\Development\\Git\\kellnerapp-angular\\dist\\mobile",
+  "author": {
+    "name": "Silvio Campos"
+  },
+  "bugs": {
+    "url": "https://github.com/silviocamposs/cordova-plugin-sunmi-inner-printer/issues"
+  },
+  "bundleDependencies": false,
   "cordova": {
-    "id": "cordova-plugin-sunmi-inner-printer-sunmi-v2",
+    "id": "cordova-plugin-sunmi-inner-printer",
     "platforms": [
       "android"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/JoseGE/cordova-plugin-sunmi-inner-printer"
-  },
-  "author": "Silvio Campos adapted to Sunmi v2 by Jose Escoboso",
-  "license": "MIT",
+  "deprecated": false,
+  "description": "Cordova/Ionic Sunmi V1 Inner Printer",
   "engines": {
     "cordovaDependencies": {
       "3.0.0": {
-        "cordova-android": ">=6.4.0"
+        "cordova-android": ">=6.3.0"
       }
     }
-  }
+  },
+  "homepage": "https://github.com/silviocamposs/cordova-plugin-sunmi-inner-printer#readme",
+  "license": "MIT",
+  "name": "cordova-plugin-sunmi-inner-printer",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/silviocamposs/cordova-plugin-sunmi-inner-printer.git"
+  },
+  "version": "1.0.3"
 }
