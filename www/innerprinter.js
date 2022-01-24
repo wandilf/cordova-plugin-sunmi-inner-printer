@@ -1,101 +1,128 @@
-exec = require('cordova/exec');
+exec = require("cordova/exec");
 
 module.exports = {
-
-  printerInit() {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, []);
-    })
+  printerInit: function () {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printerInit", []);
+    });
   },
-  printerSelfChecking() {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, []);
-    })
+  printerSelfChecking: function () {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printerSelfChecking", []);
+    });
   },
-  getPrinterSerialNo() {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, []);
-    })
+  getPrinterSerialNo: function () {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "getPrinterSerialNo", []);
+    });
   },
-  getPrinterVersion() {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, []);
-    })
+  getPrinterVersion: function () {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "getPrinterVersion", []);
+    });
   },
-  hasPrinter() {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, []);
-    })
+  hasPrinter: function () {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "hasPrinter", []);
+    });
   },
-  getPrintedLength() {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, []);
-    })
+  getPrintedLength: function () {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "getPrintedLength", []);
+    });
   },
-  lineWrap(count) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  lineWrap: function (count) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "lineWrap", [count]);
+    });
   },
-  sendRAWData(base64Data) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  sendRAWData: function (base64Data) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "sendRAWData", [base64Data]);
+    });
   },
-  setAlignment(alignment) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  setAlignment: function (alignment) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "setAlignment", [alignment]);
+    });
   },
-  setFontName(typeface) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  setFontName: function (typeface) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "setFontName", [typeface]);
+    });
   },
-  setFontSize(fontSize) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  setFontSize: function (fontSize) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "setFontSize", [fontSize]);
+    });
   },
-  printText(text) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [text]);
-    })
+  printTextWithFont: function (text, typeface, fontSize) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printTextWithFont", [
+        text,
+        typeface,
+        fontSize,
+      ]);
+    });
   },
-  printTextWithFont(text, typeface, fontSize) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  printColumnsText: function (colsTextArr, colsWidthArr, colsAlign) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printColumnsText", [
+        colsTextArr,
+        colsWidthArr,
+        colsAlign,
+      ]);
+    });
   },
-  printColumnsText(colsTextArr, colsWidthArr, colsAlign) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  printBitmap: function (base64Data, width, height) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printBitmap", [
+        base64Data,
+        width,
+        height,
+      ]);
+    });
   },
-  printBitmap(base64Data, width, height) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  printBarCode: function (barCodeData, symbology, width, height, textPosition) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printBarCode", [
+        barCodeData,
+        symbology,
+        width,
+        height,
+        textPosition,
+      ]);
+    });
   },
-  printBarCode(barCodeData, symbology, width, height, textPosition) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  printQRCode: function (qrCodeData, moduleSize, errorLevel) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printQRCode", [
+        qrCodeData,
+        moduleSize,
+        errorLevel,
+      ]);
+    });
   },
-  printQRCode(qrCodeData, moduleSize, errorLevel) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  printOriginalText: function (text) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printOriginalText", [text]);
+    });
   },
-  printOriginalText(text) {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  printString: function (text) {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "printString", [text]);
+    });
   },
-  cutPaper() {
-    return new Promise((resolve, reject) => {
-      exec(resolve, reject, "Printer", arguments.callee.name, [...arguments]);
-    })
+  printerStatusStartListener: function (onSuccess, onError) {
+    exec(onSuccess, onError, "Printer", "printerStatusStartListener", []);
   },
-
-}
+  printerStatusStopListener: function () {
+    exec(
+      function () {},
+      function () {},
+      "Printer",
+      "printerStatusStopListener",
+      []
+    );
+  },
+};
