@@ -45,5 +45,6 @@
     <source-file src="src/android/woyou/aidlservice/jiuiv5/ICallback.aidl" target-dir="src/woyou/aidlservice/jiuiv5/" />
     <source-file src="src/android/com/sunmi/trans/TransBean.java" target-dir="src/com/sunmi/trans/" />
     <source-file src="src/android/com/sunmi/trans/TransBean.aidl" target-dir="src/com/sunmi/trans/" />
+    <lib-file src="src/android/libs/core-3.3.0.jar" />
   </platform>
 </plugin>
