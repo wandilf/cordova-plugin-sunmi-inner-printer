@@ -101,11 +101,16 @@ public class Printer extends CordovaPlugin {
 
       //applicationContext.startService(intent);
       //applicationContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
-      boolean ret =  InnerPrinterManager.getInstance().bindService(applicationContext,
-        innerPrinterCallback);
-      if(!ret){
-          sunmiPrinter = NoSunmiPrinter;
+      try {
+        boolean ret =  InnerPrinterManager.getInstance().bindService(applicationContext,
+          innerPrinterCallback);
+        if(!ret){
+            sunmiPrinter = NoSunmiPrinter;
+        }
+      } catch (Exception ex) {
+        Log.i(TAG, "ERROR on bind print service: " + e.getMessage());
       }
+
 
       IntentFilter mFilter = new IntentFilter();
       mFilter.addAction(OUT_OF_PAPER_ACTION);
