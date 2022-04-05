@@ -195,7 +195,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printerInit(new ICallback.Stub() {
+            printerService.printerInit(new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -230,7 +230,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printerSelfChecking(new ICallback.Stub() {
+            printerService.printerSelfChecking(new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -312,7 +312,7 @@ public class Printer extends CordovaPlugin {
     }
 
     private int hasPrinter() {
-      return sunmiPrinter != NoSunmiPrinter;
+      return sunmiPrinter != NoSunmiPrinter ? 1 : 0;
       //final SunmiPrinterService printerService = woyouService;
       //final boolean hasPrinterService = printerService != null;
       //return hasPrinterService ? 1 : 0;
@@ -324,7 +324,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.getPrintedLength(new ICallback.Stub() {
+            printerService.getPrintedLength(new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -360,7 +360,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.lineWrap(count, new ICallback.Stub() {
+            printerService.lineWrap(count, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -396,7 +396,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.sendRAWData(d, new ICallback.Stub() {
+            printerService.sendRAWData(d, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -432,7 +432,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.setAlignment(align, new ICallback.Stub() {
+            printerService.setAlignment(align, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -468,7 +468,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.setFontName(tf, new ICallback.Stub() {
+            printerService.setFontName(tf, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -504,7 +504,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.setFontSize(fs, new ICallback.Stub() {
+            printerService.setFontSize(fs, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -542,7 +542,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printTextWithFont(txt, tf, fs, new ICallback.Stub() {
+            printerService.printTextWithFont(txt, tf, fs, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -605,7 +605,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printColumnsText(clst, clsw, clsa, new ICallback.Stub() {
+            printerService.printColumnsText(clst, clsw, clsa, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -643,7 +643,7 @@ public class Printer extends CordovaPlugin {
           @Override
           public void run() {
             try {
-              printerService.printBitmap(bitMap, new ICallback.Stub() {
+              printerService.printBitmap(bitMap, new InnerResultCallback() {
                 @Override
                 public void onRunResult(boolean isSuccess) {
                   if (isSuccess) {
@@ -689,7 +689,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printBarCode(d, s, h, w, tp, new ICallback.Stub() {
+            printerService.printBarCode(d, s, h, w, tp, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -727,7 +727,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printQRCode(d, size, level, new ICallback.Stub() {
+            printerService.printQRCode(d, size, level, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -763,7 +763,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printOriginalText(txt, new ICallback.Stub() {
+            printerService.printOriginalText(txt, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
@@ -846,7 +846,7 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printText(msgs, new ICallback.Stub() {
+            printerService.printText(msgs, new InnerResultCallback() {
               @Override
               public void onRunResult(boolean isSuccess) {
                 if (isSuccess) {
