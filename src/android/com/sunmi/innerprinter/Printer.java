@@ -35,7 +35,6 @@ import com.sunmi.peripheral.printer.InnerPrinterManager;
 import com.sunmi.peripheral.printer.InnerResultCallback;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.sunmi.peripheral.printer.WoyouConsts;
-import com.sunmi.printerhelper.R;
 
 public class Printer extends CordovaPlugin {
     private static final String TAG = "SunmiInnerPrinter";
@@ -102,7 +101,7 @@ public class Printer extends CordovaPlugin {
 
       //applicationContext.startService(intent);
       //applicationContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
-      boolean ret =  InnerPrinterManager.getInstance().bindService(context,
+      boolean ret =  InnerPrinterManager.getInstance().bindService(applicationContext,
         innerPrinterCallback);
       if(!ret){
           sunmiPrinter = NoSunmiPrinter;
