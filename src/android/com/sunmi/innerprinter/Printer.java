@@ -37,7 +37,7 @@ import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.sunmi.peripheral.printer.WoyouConsts;
 
 public class Printer extends CordovaPlugin {
-    private static final String TAG = "SunmiInnerPrinter";
+    private static final String TAG = "SunmiPrinterPlugin";
     public static int NoSunmiPrinter = 0x00000000;
     public static int CheckSunmiPrinter = 0x00000001;
     public static int FoundSunmiPrinter = 0x00000002;
@@ -107,6 +107,7 @@ public class Printer extends CordovaPlugin {
         if(!ret){
             sunmiPrinter = NoSunmiPrinter;
         }
+        Log.i(TAG, "Bind print service result: " + ret);
       } catch (Exception e) {
         Log.i(TAG, "ERROR on bind print service: " + e.getMessage());
       }
@@ -326,10 +327,10 @@ public class Printer extends CordovaPlugin {
     }
 
     private int hasPrinter() {
-      return sunmiPrinter != NoSunmiPrinter ? 1 : 0;
-      //final SunmiPrinterService printerService = woyouService;
-      //final boolean hasPrinterService = printerService != null;
-      //return hasPrinterService ? 1 : 0;
+      //return sunmiPrinter != NoSunmiPrinter ? 1 : 0;
+      final SunmiPrinterService printerService = woyouService;
+      final boolean hasPrinterService = printerService != null;
+      return hasPrinterService ? 1 : 0;
     }
 
     public void getPrintedLength(final CallbackContext callbackContext) {
