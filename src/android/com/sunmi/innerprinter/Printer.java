@@ -107,7 +107,7 @@ public class Printer extends CordovaPlugin {
         if(!ret){
             sunmiPrinter = NoSunmiPrinter;
         }
-      } catch (Exception ex) {
+      } catch (Exception e) {
         Log.i(TAG, "ERROR on bind print service: " + e.getMessage());
       }
 
