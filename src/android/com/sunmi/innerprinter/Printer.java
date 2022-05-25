@@ -226,6 +226,7 @@ public class Printer extends CordovaPlugin {
 
     public void scannerInit(final CallbackContext callbackContext) {
       //scanner service
+      Context applicationContext = this.cordova.getActivity().getApplicationContext();
       Intent intent = new Intent();
       intent.setPackage("com.sunmi.scanner");
       intent.setAction("com.sunmi.scanner.IScanInterface");
