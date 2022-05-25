@@ -227,7 +227,7 @@ public class Printer extends CordovaPlugin {
       IntentFilter scanFilter = new IntentFilter();    
       scanFilter.addAction("com.sunmi.scanner.ACTION_DATA_CODE_RECEIVED");
       applicationContext.registerReceiver(scanReceiver, scanFilter);
-      scanReceiver.setCordova(this.cordova);
+      scanReceiver.setCordova(this.cordova, this.webView);
       callbackContext.success("scanner init success");
     }
 

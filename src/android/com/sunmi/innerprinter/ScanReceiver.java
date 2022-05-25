@@ -2,6 +2,8 @@ package com.sunmi.innerprinter;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaWebView;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
@@ -17,13 +19,15 @@ public class ScanReceiver extends BroadcastReceiver {
   private CallbackContext callbackReceive;
   private boolean isReceiving = true;
   private CordovaInterface cordova;
+  private CordovaWebView webView;
 
   public ScanReceiver() {
 
   }
 
-  public void setCordova(CordovaInterface cordova) {
+  public void setCordova(CordovaInterface cordova, CordovaWebView webView) {
     this.cordova = cordova;
+    this.webView = webView;
   }
 
   @Override
