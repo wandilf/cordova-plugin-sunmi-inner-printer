@@ -148,9 +148,9 @@ public class Printer extends CordovaPlugin {
         @Override       
         public void onReceive(Context context, Intent intent) {      
             String code = intent.getStringExtra("data");
-            String arr = intent.getByteArrayExtra("source_byte");
+            //String arr = intent.getByteArrayExtra("source_byte");
             if (code != null && !code.isEmpty()) {
-              this.loadUrl("cordova.fireDocumentEvent('onScannedValue', {'value':"+code+"});");
+              loadUrl("cordova.fireDocumentEvent('onScannedValue', {'value':"+code+"});");
             }
         }
     };
