@@ -36,7 +36,7 @@ public class ScanReceiver extends BroadcastReceiver {
     Log.i(TAG, "Bind print service result: " + code);
     //String arr = intent.getByteArrayExtra("source_byte");
     if (code != null && !code.isEmpty()) {
-      loadUrl("cordova.fireDocumentEvent('onScannedValue', {'value':"+code+"});");
+      loadUrl("cordova.fireDocumentEvent('onScannedValue', {'value':\""+code+"\"});");
     }
   }
 
