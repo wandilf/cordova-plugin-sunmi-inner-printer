@@ -155,6 +155,15 @@ public class Printer extends CordovaPlugin {
         }
     };
 
+    private void loadUrl(String url) {
+        Log.d(TAG, ">>> loadUrl(): " + url);
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                webView.loadUrl("javascript:try{" + url + "}catch(e){console.log('exception firing pause event from native');};");
+            }
+        });
+    }
+
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
       if (action.equals("printerInit")) {
