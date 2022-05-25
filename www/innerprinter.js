@@ -125,4 +125,7 @@ module.exports = {
       []
     );
   },
+  initScanner: function (onSuccess, onError) {
+    exec(onSuccess, onError, "Printer", "initScanner", []);
+  },
 };

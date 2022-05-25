@@ -11,6 +11,7 @@ import org.apache.cordova.CordovaWebView;
 
 import woyou.aidlservice.jiuiv5.ICallback;
 import woyou.aidlservice.jiuiv5.IWoyouService;
+import com.sunmi.scanner.IScanInterface;
 
 import android.content.Context;
 import android.content.Intent;
@@ -77,6 +78,21 @@ public class Printer extends CordovaPlugin {
     //   }
     // };
 
+    private IScanInterface scanInterface;
+    private static ServiceConnection conn = new ServiceConnection() {
+      @Override
+      public void onServiceConnected(ComponentName name, IBinder service) {
+        scanInterface = IScanInterface.Stub.asInterface(service);
+        Log.i("setting", "Scanner Service Connected!");
+      }
+
+      @Override
+      public void onServiceDisconnected(ComponentName name) {
+        Log.e("setting", "Scanner Service Disconnected!");
+        scanInterface = null;
+      }
+    };
+
     public final static String OUT_OF_PAPER_ACTION = "woyou.aidlservice.jiuv5.OUT_OF_PAPER_ACTION";
     public final static String ERROR_ACTION = "woyou.aidlservice.jiuv5.ERROR_ACTION";
     public final static String NORMAL_ACTION = "woyou.aidlservice.jiuv5.NORMAL_ACTION";
@@ -95,9 +111,9 @@ public class Printer extends CordovaPlugin {
 
       bitMapUtils = new BitmapUtils(applicationContext);
 
-      Intent intent = new Intent();
-      intent.setPackage("woyou.aidlservice.jiuiv5");
-      intent.setAction("woyou.aidlservice.jiuiv5.IWoyouService");
+      //Intent intent = new Intent();
+      //intent.setPackage("woyou.aidlservice.jiuiv5");
+      //intent.setAction("woyou.aidlservice.jiuiv5.IWoyouService");
 
       //applicationContext.startService(intent);
       //applicationContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
@@ -126,6 +142,17 @@ public class Printer extends CordovaPlugin {
 
       applicationContext.registerReceiver(printerStatusReceiver, mFilter);
     }
+
+    private BroadcastReceiver scanReceiver = new BroadcastReceiver() {       
+        @Override       
+        public void onReceive(Context context, Intent intent) {      
+            String code = intent.getStringExtra("data");
+            String arr = intent.getByteArrayExtra("source_byte");
+            if (code != null && !code.isEmpty()) {
+              this.loadUrl("cordova.fireDocumentEvent('onScannedValue', {'value':"+code+"});");
+            }
+        }
+    };
 
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
@@ -189,10 +216,28 @@ public class Printer extends CordovaPlugin {
       } else if (action.equals("printerStatusStopListener")) {
         printerStatusStopListener();
         return true;
+      } else if (action.equals("initScanner")) {
+        scannerInit(callbackContext);
+        return true;
       }
 
       return false;
     }
+
+    public void scannerInit(final CallbackContext callbackContext) {
+      //scanner service
+      Intent intent = new Intent();
+      intent.setPackage("com.sunmi.scanner");
+      intent.setAction("com.sunmi.scanner.IScanInterface");
+
+      applicationContext.startService(intent);
+      applicationContext.bindService(intent, conn, Context.BIND_AUTO_CREATE);
+      IntentFilter scanFilter = new IntentFilter();    
+      scanFilter.addAction("com.sunmi.scanner.ACTION_DATA_CODE_RECEIVED");
+      applicationContext.registerReceiver(scanReceiver, scanFilter);
+      callbackContext.success("scanner init success");
+    }
+
 
     public void printerInit(final CallbackContext callbackContext) {
       final SunmiPrinterService printerService = woyouService;
