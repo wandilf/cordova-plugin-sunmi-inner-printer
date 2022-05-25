@@ -50,6 +50,7 @@ public class Printer extends CordovaPlugin {
     private BitmapUtils bitMapUtils;
    // private IWoyouService woyouService;
     private PrinterStatusReceiver printerStatusReceiver = new PrinterStatusReceiver();
+    private ScanReceiver scanReceiver = new ScanReceiver();
 
     private InnerPrinterCallback innerPrinterCallback = new InnerPrinterCallback() {
         @Override
@@ -142,26 +143,6 @@ public class Printer extends CordovaPlugin {
       mFilter.addAction(FIRMWARE_UPDATING_ACITON);
 
       applicationContext.registerReceiver(printerStatusReceiver, mFilter);
-    }
-
-    private BroadcastReceiver scanReceiver = new BroadcastReceiver() {       
-        @Override       
-        public void onReceive(Context context, Intent intent) {      
-            String code = intent.getStringExtra("data");
-            //String arr = intent.getByteArrayExtra("source_byte");
-            if (code != null && !code.isEmpty()) {
-              loadUrl("cordova.fireDocumentEvent('onScannedValue', {'value':"+code+"});");
-            }
-        }
-    };
-
-    private void loadUrl(String url) {
-        Log.d(TAG, ">>> loadUrl(): " + url);
-        cordova.getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                webView.loadUrl("javascript:try{" + url + "}catch(e){console.log('exception firing pause event from native');};");
-            }
-        });
     }
 
     @Override
@@ -1018,6 +999,16 @@ public class Printer extends CordovaPlugin {
 
     public void printerStatusStopListener() {
       final PrinterStatusReceiver receiver = printerStatusReceiver;
+      receiver.stopReceiving();
+    }
+
+    public void scanStartListener(final CallbackContext callbackContext) {
+      final ScanReceiver receiver = scanReceiver;
+      receiver.startReceiving(callbackContext);
+    }
+
+    public void scanStopListener() {
+      final ScanReceiver receiver = scanReceiver;
       receiver.stopReceiving();
     }
 

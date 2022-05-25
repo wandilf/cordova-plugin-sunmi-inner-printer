@@ -31,6 +31,11 @@
           <action android:name="woyou.aidlservice.jiuv5.FIRMWARE_UPDATING_ACITON" />
         </intent-filter>
       </receiver>
+      <receiver android:name="com.sunmi.innerprinter.ScanReceiver" android:enabled="true">
+        <intent-filter android:priority="1000">
+          <action android:name="com.sunmi.scanner.ACTION_DATA_CODE_RECEIVED" />
+        </intent-filter>
+      </receiver>
       <service android:name="woyou.aidlservice.jiuiv5.IWoyouService">
         <intent-filter>
           <action android:name="woyou.aidlservice.jiuiv5.IWoyouService" />
@@ -44,6 +49,7 @@
     </config-file>
     <source-file src="src/android/com/sunmi/innerprinter/Printer.java" target-dir="src/com/sunmi/innerprinter/" />
     <source-file src="src/android/com/sunmi/innerprinter/PrinterStatusReceiver.java" target-dir="src/com/sunmi/innerprinter/" />
+    <source-file src="src/android/com/sunmi/innerprinter/ScanReceiver.java" target-dir="src/com/sunmi/innerprinter/" />
     <source-file src="src/android/com/sunmi/utils/BitmapUtils.java" target-dir="src/com/sunmi/utils/" />
     <source-file src="src/android/com/sunmi/utils/ThreadPoolManager.java" target-dir="src/com/sunmi/utils/" />
     <source-file src="src/android/woyou/aidlservice/jiuiv5/IWoyouService.aidl" target-dir="src/woyou/aidlservice/jiuiv5/" />
