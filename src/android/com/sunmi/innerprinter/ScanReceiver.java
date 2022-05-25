@@ -16,13 +16,18 @@ public class ScanReceiver extends BroadcastReceiver {
 
   private CallbackContext callbackReceive;
   private boolean isReceiving = true;
+  private CordovaInterface cordova;
 
   public ScanReceiver() {
 
   }
 
+  public void setCordova(CordovaInterface cordova) {
+    this.cordova = cordova;
+  }
+
   @Override
-  public void onReceive(Context context, Intent data) {
+  public void onReceive(Context context, Intent intent) {
     String code = intent.getStringExtra("data");
     Log.i(TAG, "Bind print service result: " + code);
     //String arr = intent.getByteArrayExtra("source_byte");
