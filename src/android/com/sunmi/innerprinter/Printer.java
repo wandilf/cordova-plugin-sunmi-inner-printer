@@ -80,7 +80,7 @@ public class Printer extends CordovaPlugin {
     // };
 
     private IScanInterface scanInterface;
-    private static ServiceConnection conn = new ServiceConnection() {
+    private ServiceConnection conn = new ServiceConnection() {
       @Override
       public void onServiceConnected(ComponentName name, IBinder service) {
         scanInterface = IScanInterface.Stub.asInterface(service);
