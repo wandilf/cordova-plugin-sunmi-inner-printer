@@ -36,6 +36,11 @@
           <action android:name="woyou.aidlservice.jiuiv5.IWoyouService" />
         </intent-filter>
       </service>
+      <service android:name="com.sunmi.scanner.IScanInterface">
+        <intent-filter>
+          <action android:name="com.sunmi.scanner.IScanInterface" />
+        </intent-filter>
+      </service>
     </config-file>
     <source-file src="src/android/com/sunmi/innerprinter/Printer.java" target-dir="src/com/sunmi/innerprinter/" />
     <source-file src="src/android/com/sunmi/innerprinter/PrinterStatusReceiver.java" target-dir="src/com/sunmi/innerprinter/" />
@@ -45,5 +50,6 @@
     <source-file src="src/android/woyou/aidlservice/jiuiv5/ICallback.aidl" target-dir="src/woyou/aidlservice/jiuiv5/" />
     <source-file src="src/android/com/sunmi/trans/TransBean.java" target-dir="src/com/sunmi/trans/" />
     <source-file src="src/android/com/sunmi/trans/TransBean.aidl" target-dir="src/com/sunmi/trans/" />
+    <source-file src="src/android/com/sunmi/scanner/IScanInterface.aidl" target-dir="src/com/sunmi/scanner/" />
   </platform>
 </plugin>
