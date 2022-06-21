@@ -56,10 +56,19 @@ public class ScanReceiver extends BroadcastReceiver {
 
   private void loadUrl(String url) {
     Log.d(TAG, ">>> loadUrl(): " + url);
-    cordova.getActivity().runOnUiThread(new Runnable() {
-        public void run() {
-            webView.loadUrl("javascript:try{" + url + "}catch(e){console.log('exception firing pause event from native');};");
-        }
-    });
+    if (cordova == null) {
+      Log.i(TAG, "cordova is not initialized unable to send url: " + url);
+      return;
+    }
+
+    try {
+      cordova.getActivity().runOnUiThread(new Runnable() {
+          public void run() {
+              webView.loadUrl("javascript:try{" + url + "}catch(e){console.log('exception firing pause event from native');};");
+          }
+      });
+    } catch(Exception ex) {
+      Log.e(TAG, "failed to send url", ex);
+    }
   }
 }
