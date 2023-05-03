@@ -38,6 +38,9 @@ import com.sunmi.peripheral.printer.InnerResultCallback;
 import com.sunmi.peripheral.printer.SunmiPrinterService;
 import com.sunmi.peripheral.printer.WoyouConsts;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class Printer extends CordovaPlugin {
     private static final String TAG = "SunmiPrinterPlugin";
     public static int NoSunmiPrinter = 0x00000000;
@@ -48,9 +51,9 @@ public class Printer extends CordovaPlugin {
     public int sunmiPrinter = CheckSunmiPrinter;
     private SunmiPrinterService woyouService;
     private BitmapUtils bitMapUtils;
-   // private IWoyouService woyouService;
     private PrinterStatusReceiver printerStatusReceiver = new PrinterStatusReceiver();
     private ScanReceiver scanReceiver = new ScanReceiver();
+    private CallbackContext callbackContext;
 
     private InnerPrinterCallback innerPrinterCallback = new InnerPrinterCallback() {
         @Override
@@ -66,19 +69,33 @@ public class Printer extends CordovaPlugin {
         }
     };
 
-    // private ServiceConnection connService = new ServiceConnection() {
-    //   @Override
-    //   public void onServiceDisconnected(ComponentName name) {
-    //     woyouService = null;
-    //     Log.d(TAG, "Service disconnected");
-    //   }
+    private InnerResultCallback innerResultCallback = new InnerResultCallback() {
+      @Override
+      public void onRunResult(boolean isSuccess) {
+        if (isSuccess) {
+          LogTimeDiff(currentAction);
+          callbackContext.success("");
+        } else {
+          callbackContext.error(isSuccess + "");
+        }
+      }
 
-    //   @Override
-    //   public void onServiceConnected(ComponentName name, IBinder service) {
-    //     woyouService = IWoyouService.Stub.asInterface(service);
-    //     Log.d(TAG, "Service connected");
-    //   }
-    // };
+      @Override
+      public void onReturnString(String result) {
+        callbackContext.success(result);
+      }
+
+      @Override
+      public void onRaiseException(int code, String msg) {
+        callbackContext.error(msg);
+      }
+
+      @Override
+      public void onPrintResult(int code, String msg) {
+        callbackContext.success(msg);
+      }
+    };
+
 
     private IScanInterface scanInterface;
     private ServiceConnection conn = new ServiceConnection() {
@@ -108,17 +125,12 @@ public class Printer extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
       super.initialize(cordova, webView);
+      Log.i(TAG, "init sunmi plugin");
 
       Context applicationContext = this.cordova.getActivity().getApplicationContext();
 
       bitMapUtils = new BitmapUtils(applicationContext);
 
-      //Intent intent = new Intent();
-      //intent.setPackage("woyou.aidlservice.jiuiv5");
-      //intent.setAction("woyou.aidlservice.jiuiv5.IWoyouService");
-
-      //applicationContext.startService(intent);
-      //applicationContext.bindService(intent, connService, Context.BIND_AUTO_CREATE);
       try {
         boolean ret =  InnerPrinterManager.getInstance().bindService(applicationContext,
           innerPrinterCallback);
@@ -145,8 +157,13 @@ public class Printer extends CordovaPlugin {
       applicationContext.registerReceiver(printerStatusReceiver, mFilter);
     }
 
+    private Date startTime;
+    private String currentAction;
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
+      startTime = Calendar.getInstance().getTime();
+      currentAction = action;
+      this.callbackContext = callbackContext;
       if (action.equals("printerInit")) {
         printerInit(callbackContext);
         return true;
@@ -224,7 +241,7 @@ public class Printer extends CordovaPlugin {
 
       applicationContext.startService(intent);
       applicationContext.bindService(intent, conn, Context.BIND_AUTO_CREATE);
-      IntentFilter scanFilter = new IntentFilter();    
+      IntentFilter scanFilter = new IntentFilter();
       scanFilter.addAction("com.sunmi.scanner.ACTION_DATA_CODE_RECEIVED");
       applicationContext.registerReceiver(scanReceiver, scanFilter);
       scanReceiver.setCordova(this.cordova, this.webView);
@@ -418,31 +435,8 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.lineWrap(count, new InnerResultCallback() {
-              @Override
-              public void onRunResult(boolean isSuccess) {
-                if (isSuccess) {
-                  callbackContext.success("");
-                } else {
-                  callbackContext.error(isSuccess + "");
-                }
-              }
-
-              @Override
-              public void onReturnString(String result) {
-                callbackContext.success(result);
-              }
-
-              @Override
-              public void onRaiseException(int code, String msg) {
-                callbackContext.error(msg);
-              }
-
-              @Override
-              public void onPrintResult(int code, String msg) {
-                  callbackContext.success(msg);
-              }
-            });
+            printerService.lineWrap(count, null);
+            callbackContext.success("");
           } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "ERROR: " + e.getMessage());
@@ -452,6 +446,16 @@ public class Printer extends CordovaPlugin {
       });
     }
 
+    private void LogTimeDiff(String method) {
+      try {
+        Date now = Calendar.getInstance().getTime();
+        long diff = now.getTime() - startTime.getTime();
+        Log.i(TAG, "duration for " + method + ", " + diff + "ms");
+      } catch (Exception ex) {
+        Log.i(TAG, "ERROR: " + ex.getMessage());
+      }
+    }
+
     public void sendRAWData(String base64EncriptedData, final CallbackContext callbackContext) {
       final SunmiPrinterService printerService = woyouService;
       final byte[] d = Base64.decode(base64EncriptedData, Base64.DEFAULT);
@@ -459,31 +463,8 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.sendRAWData(d, new InnerResultCallback() {
-              @Override
-              public void onRunResult(boolean isSuccess) {
-                if (isSuccess) {
-                  callbackContext.success("");
-                } else {
-                  callbackContext.error(isSuccess + "");
-                }
-              }
-
-              @Override
-              public void onReturnString(String result) {
-                callbackContext.success(result);
-              }
-
-              @Override
-              public void onRaiseException(int code, String msg) {
-                callbackContext.error(msg);
-              }
-
-              @Override
-              public void onPrintResult(int code, String msg) {
-                  callbackContext.success(msg);
-              }
-            });
+            printerService.sendRAWData(d, null);
+            callbackContext.success("");
           } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "ERROR: " + e.getMessage());
@@ -500,31 +481,8 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.setAlignment(align, new InnerResultCallback() {
-              @Override
-              public void onRunResult(boolean isSuccess) {
-                if (isSuccess) {
-                  callbackContext.success("");
-                } else {
-                  callbackContext.error(isSuccess + "");
-                }
-              }
-
-              @Override
-              public void onReturnString(String result) {
-                callbackContext.success(result);
-              }
-
-              @Override
-              public void onRaiseException(int code, String msg) {
-                callbackContext.error(msg);
-              }
-
-              @Override
-              public void onPrintResult(int code, String msg) {
-                  callbackContext.success(msg);
-              }
-            });
+            printerService.setAlignment(align, null);
+            callbackContext.success("");
           } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "ERROR: " + e.getMessage());
@@ -602,31 +560,8 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printTextWithFont(txt, tf, fs, new InnerResultCallback() {
-              @Override
-              public void onRunResult(boolean isSuccess) {
-                if (isSuccess) {
-                  callbackContext.success("");
-                } else {
-                  callbackContext.error(isSuccess + "");
-                }
-              }
-
-              @Override
-              public void onReturnString(String result) {
-                callbackContext.success(result);
-              }
-
-              @Override
-              public void onRaiseException(int code, String msg) {
-                callbackContext.error(msg);
-              }
-
-              @Override
-              public void onPrintResult(int code, String msg) {
-                  callbackContext.success(msg);
-              }
-            });
+            printerService.printTextWithFont(txt, tf, fs, null);
+            callbackContext.success("");
           } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "ERROR: " + e.getMessage());
@@ -713,31 +648,8 @@ public class Printer extends CordovaPlugin {
           @Override
           public void run() {
             try {
-              printerService.printBitmap(bitMap, new InnerResultCallback() {
-                @Override
-                public void onRunResult(boolean isSuccess) {
-                  if (isSuccess) {
-                    callbackContext.success("");
-                  } else {
-                    callbackContext.error(isSuccess + "");
-                  }
-                }
-
-                @Override
-                public void onReturnString(String result) {
-                  callbackContext.success(result);
-                }
-
-                @Override
-                public void onRaiseException(int code, String msg) {
-                  callbackContext.error(msg);
-                }
-
-                @Override
-                public void onPrintResult(int code, String msg) {
-                    callbackContext.success(msg);
-                }
-              });
+              printerService.printBitmap(bitMap, null);
+              callbackContext.success("");
             } catch (Exception e) {
               e.printStackTrace();
               Log.i(TAG, "ERROR: " + e.getMessage());
@@ -807,31 +719,8 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printQRCode(d, size, level, new InnerResultCallback() {
-              @Override
-              public void onRunResult(boolean isSuccess) {
-                if (isSuccess) {
-                  callbackContext.success("");
-                } else {
-                  callbackContext.error(isSuccess + "");
-                }
-              }
-
-              @Override
-              public void onReturnString(String result) {
-                callbackContext.success(result);
-              }
-
-              @Override
-              public void onRaiseException(int code, String msg) {
-                callbackContext.error(msg);
-              }
-
-              @Override
-              public void onPrintResult(int code, String msg) {
-                  callbackContext.success(msg);
-              }
-            });
+            printerService.printQRCode(d, size, level, null);
+            callbackContext.success("");
           } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "ERROR: " + e.getMessage());
