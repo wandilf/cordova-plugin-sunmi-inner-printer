@@ -17,6 +17,9 @@
         <param name="onload" value="true" />
       </feature>
     </config-file>
+    <config-file target="AndroidManifest.xml" parent="/manifest/queries">
+        <package android:name="woyou.aidlservice.jiuiv5" />
+    </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <receiver android:name="com.sunmi.innerprinter.PrinterStatusReceiver" android:enabled="true" android:exported="false">
         <intent-filter android:priority="1000">
