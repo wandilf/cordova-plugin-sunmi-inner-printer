@@ -56,6 +56,11 @@ module.exports = {
       exec(resolve, reject, "Printer", "setFontSize", [fontSize]);
     });
   },
+  cutPaper: function () {
+    return new Promise(function (resolve, reject) {
+      exec(resolve, reject, "Printer", "cutPaper", []);
+    });
+  },
   printTextWithFont: function (text, typeface, fontSize) {
     return new Promise(function (resolve, reject) {
       exec(resolve, reject, "Printer", "printTextWithFont", [

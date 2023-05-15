@@ -227,6 +227,9 @@ public class Printer extends CordovaPlugin {
       } else if (action.equals("initScanner")) {
         scannerInit(callbackContext);
         return true;
+      } else if (action.equals("cutPaper")) {
+        cutPaper(callbackContext);
+        return true;
       }
 
       return false;
@@ -541,6 +544,23 @@ public class Printer extends CordovaPlugin {
         public void run() {
           try {
             printerService.setFontSize(fs, null);
+            callbackContext.success("");
+          } catch (Exception e) {
+            e.printStackTrace();
+            Log.i(TAG, "ERROR: " + e.getMessage());
+            callbackContext.error(e.getMessage());
+          }
+        }
+      });
+    }
+
+    public void cutPaper(final CallbackContext callbackContext) {
+      final SunmiPrinterService printerService = woyouService;
+      ThreadPoolManager.getInstance().executeTask(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            printerService.cutPaper(null);
             callbackContext.success("");
           } catch (Exception e) {
             e.printStackTrace();
