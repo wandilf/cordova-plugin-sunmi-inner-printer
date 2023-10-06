@@ -739,8 +739,31 @@ public class Printer extends CordovaPlugin {
         @Override
         public void run() {
           try {
-            printerService.printQRCode(d, size, level, null);
-            callbackContext.success("");
+            printerService.printQRCode(d, size, level, new InnerResultCallback() {
+              @Override
+              public void onRunResult(boolean isSuccess) {
+                if (isSuccess) {
+                  callbackContext.success("");
+                } else {
+                  callbackContext.error(isSuccess + "");
+                }
+              }
+
+              @Override
+              public void onReturnString(String result) {
+                callbackContext.success(result);
+              }
+
+              @Override
+              public void onRaiseException(int code, String msg) {
+                callbackContext.error(msg);
+              }
+
+              @Override
+              public void onPrintResult(int code, String msg) {
+                  callbackContext.success(msg);
+              }
+            });
           } catch (Exception e) {
             e.printStackTrace();
             Log.i(TAG, "ERROR: " + e.getMessage());
