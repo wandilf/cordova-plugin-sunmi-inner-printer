@@ -745,7 +745,7 @@ public class Printer extends CordovaPlugin {
                 if (isSuccess) {
                   callbackContext.success("");
                 } else {
-                  callbackContext.error(isSuccess + "");
+                  //callbackContext.error(isSuccess + "");
                 }
               }
 
