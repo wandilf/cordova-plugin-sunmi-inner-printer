@@ -5,6 +5,7 @@ import org.apache.cordova.CallbackContext;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
@@ -21,6 +22,29 @@ import android.content.ServiceConnection;
 import android.content.BroadcastReceiver;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+
+import android.graphics.RectF;
+import android.text.TextPaint;
+import android.text.StaticLayout;
+import android.text.Layout.Alignment;
+import android.graphics.Rect;
+import android.widget.TextView;
+import androidx.core.text.HtmlCompat;
+import android.text.Html.ImageGetter;
+import android.text.Html;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
+import android.app.Activity;
+import android.widget.Toast;
+
+import android.graphics.Paint;
+import android.graphics.Paint.Align;
+import android.util.Base64;
+
+
 
 import android.os.IBinder;
 
@@ -47,7 +71,7 @@ public class Printer extends CordovaPlugin {
     public static int CheckSunmiPrinter = 0x00000001;
     public static int FoundSunmiPrinter = 0x00000002;
     public static int LostSunmiPrinter = 0x00000003;
-
+    CordovaInterface mycordova;
     public int sunmiPrinter = CheckSunmiPrinter;
     private SunmiPrinterService woyouService;
     private BitmapUtils bitMapUtils;
@@ -126,6 +150,7 @@ public class Printer extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
       super.initialize(cordova, webView);
       Log.i(TAG, "init sunmi plugin");
+      mycordova = cordova;
 
       Context applicationContext = this.cordova.getActivity().getApplicationContext();
 
@@ -176,7 +201,7 @@ public class Printer extends CordovaPlugin {
       } else if (action.equals("getPrinterVersion")) {
         getPrinterVersion(callbackContext);
         return true;
-      } else if (action.equals("hasPrinter")) {
+      } else if (action.equals("isPaperPresent")) {
         hasPrinter(callbackContext);
         return true;
       } else if (action.equals("getPrintedLength")) {
@@ -203,9 +228,18 @@ public class Printer extends CordovaPlugin {
       } else if (action.equals("printColumnsText")) {
         printColumnsText(data.getJSONArray(0), data.getJSONArray(1), data.getJSONArray(2), callbackContext);
         return true;
-      } else if (action.equals("printBitmap")) {
-        printBitmap(data.getString(0), data.getInt(1), data.getInt(2), callbackContext);
+      } else if (action.equals("printRawText")) {
+                 String escBufferSTR = data.getString(0);
+                        byte[] decodedString = Base64.decode(escBufferSTR, Base64.DEFAULT);
+                        String decodedStringString = new String(decodedString);
+                        Bitmap bitmap = getBitmap(decodedStringString, callbackContext);
+
+                        
+//int boundedWidth = getBitmapHeigt(decodedStringString, callbackContext);
+
+        printBitmap(bitmap, 384, callbackContext);
         return true;
+
       } else if (action.equals("printBarCode")) {
         printBarCode(data.getString(0), data.getInt(1), data.getInt(2), data.getInt(1), data.getInt(2), callbackContext);
         return true;
@@ -659,16 +693,16 @@ public class Printer extends CordovaPlugin {
       });
     }
 
-    public void printBitmap(String data, int width, int height, final CallbackContext callbackContext) {
+    public void printBitmap(Bitmap data, int width, final CallbackContext callbackContext) {
       try {
         final SunmiPrinterService printerService = woyouService;
-        byte[] decoded = Base64.decode(data, Base64.DEFAULT);
-        final Bitmap bitMap = bitMapUtils.decodeBitmap(decoded, width, height);
+        
+
         ThreadPoolManager.getInstance().executeTask(new Runnable() {
           @Override
           public void run() {
             try {
-              printerService.printBitmap(bitMap, null);
+              printerService.printBitmap(data, null);
               callbackContext.success("");
             } catch (Exception e) {
               e.printStackTrace();
@@ -682,6 +716,142 @@ public class Printer extends CordovaPlugin {
         Log.i(TAG, "ERROR: " + e.getMessage());
       }
     }
+        private int getBitmapHeigt(String text, CallbackContext callbackContext) {
+        JSONObject erro = new JSONObject();
+        TextPaint myTextPaint = new TextPaint();
+        myTextPaint.setAntiAlias(true);
+        myTextPaint.setTextSize(28);
+        myTextPaint.setColor(Color.BLACK);
+
+        int boundedWidth = 384;
+
+        StaticLayout layout = new StaticLayout(
+
+                HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY, new Html.ImageGetter() {
+                    @Override
+                    public Drawable getDrawable(String source) {
+
+                        try {
+                            byte[] data;
+                            String img = source.split(",")[1];
+                            data = Base64.decode(img, Base64.DEFAULT);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            Drawable d = new BitmapDrawable(mycordova.getActivity().getResources(), bitmap);
+                            Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                            Canvas canvas = new Canvas(mutableBitmap);
+                            d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                            return d;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            try {
+                                erro.put("status", 404);
+                                callbackContext.error(erro);
+                            } catch (Exception o) {
+                                callbackContext.error(400);
+                            }
+                            return null;
+                        }
+                    }
+
+                }, null
+                ),
+                myTextPaint, boundedWidth, Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        int height = layout.getHeight();
+
+        return height;
+    }
+
+
+
+        private Bitmap getBitmap(String text, CallbackContext callbackContext) {
+        JSONObject erro = new JSONObject();
+        TextPaint myTextPaint = new TextPaint();
+        myTextPaint.setAntiAlias(true);
+        myTextPaint.setTextSize(28);
+        myTextPaint.setColor(Color.BLACK);
+
+        int boundedWidth = 384;
+
+        StaticLayout layout = new StaticLayout(
+
+                HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY, new Html.ImageGetter() {
+                    @Override
+                    public Drawable getDrawable(String source) {
+
+                        try {
+                            byte[] data;
+                            String img = source.split(",")[1];
+                            data = Base64.decode(img, Base64.DEFAULT);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            Drawable d = new BitmapDrawable(mycordova.getActivity().getResources(), bitmap);
+                            Bitmap mutableBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                            Canvas canvas = new Canvas(mutableBitmap);
+                            d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                            return d;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            try {
+                                erro.put("status", 404);
+                                callbackContext.error(erro);
+                            } catch (Exception o) {
+                                callbackContext.error(400);
+                            }
+                            return null;
+                        }
+                    }
+
+                }, null
+                // new Html.TagHandler() {
+                // @Override
+                // public void handleTag(boolean opening,
+                // String tag,
+                // Editable output,
+                // XMLReader xmlReader) {
+
+                // if (opening && tag.equals("li")) {
+                // final HashMap<String, String> attributes = new HashMap<String, String>();
+                // try {
+
+                // Field elementField = xmlReader.getClass().getDeclaredField("theNewElement");
+                // elementField.setAccessible(true);
+                // Object element = elementField.get(xmlReader);
+                // Field attsField = element.getClass().getDeclaredField("theAtts");
+                // attsField.setAccessible(true);
+                // Object atts = attsField.get(element);
+                // Field dataField = atts.getClass().getDeclaredField("data");
+                // dataField.setAccessible(true);
+                // String[] data = (String[]) dataField.get(atts);
+                // Field lengthField = atts.getClass().getDeclaredField("length");
+                // lengthField.setAccessible(true);
+                // int len = (Integer) lengthField.get(atts);
+                // for (int i = 0; i < len; i++)
+                // attributes.put(data[i * 5 + 1], data[i * 5 + 4]);
+                // String lenST = attributes.get("id");
+                // int lenSTST = lenST.length();
+                // output.append("\n\n\n\n");
+
+                // } catch (Exception e) {
+                // callbackContext.error(e.getMessage());
+                // }
+                // }
+
+                // }
+                // }
+                ),
+                myTextPaint, boundedWidth, Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        int height = layout.getHeight();
+
+        Bitmap bitmap = Bitmap.createBitmap(384, height, Bitmap.Config.ARGB_8888);
+
+        Canvas c = new Canvas(bitmap);
+        c.drawColor(Color.WHITE);
+        layout.draw(c);
+
+        return bitmap;
+    }
+
 
     public void printBarCode(String data, int symbology, int width, int height, int textPosition,
         final CallbackContext callbackContext) {
