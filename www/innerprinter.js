@@ -1,30 +1,30 @@
 exec = require("cordova/exec");
 
 module.exports = {
-  printerInit: function () {
-    return new Promise(function (resolve, reject) {
-      exec(resolve, reject, "Printer", "printerInit", []);
-    });
+  printerInit: function (onSuccess, onError) {
+    //  return new Promise(function (onSuccess, onError) {
+    exec(onSuccess, onError, "Printer", "printerInit", []);
+    //    });
   },
-  printerSelfChecking: function () {
-    return new Promise(function (resolve, reject) {
-      exec(resolve, reject, "Printer", "printerSelfChecking", []);
-    });
+  printerSelfChecking: function (onSuccess, onError) {
+    // return new Promise(function (resolve, reject) {
+    exec(onSuccess, onError, "Printer", "printerSelfChecking", []);
+    // });
   },
-  getPrinterSerialNo: function () {
-    return new Promise(function (resolve, reject) {
-      exec(resolve, reject, "Printer", "getPrinterSerialNo", []);
-    });
+  getPrinterSerialNo: function (onSuccess, onError) {
+    //  return new Promise(function (resolve, reject) {
+    exec(onSuccess, onError, "Printer", "getPrinterSerialNo", []);
+    // });
   },
   getPrinterVersion: function () {
     return new Promise(function (resolve, reject) {
       exec(resolve, reject, "Printer", "getPrinterVersion", []);
     });
   },
-  hasPrinter: function () {
-    return new Promise(function (resolve, reject) {
-      exec(resolve, reject, "Printer", "hasPrinter", []);
-    });
+  isPaperPresent: function (onSuccess, onError) {
+    // return new Promise(function (onSuccess, onError) {
+    exec(onSuccess, onError, "Printer", "isPaperPresent", []);
+    // });
   },
   getPrintedLength: function () {
     return new Promise(function (resolve, reject) {
@@ -79,14 +79,14 @@ module.exports = {
       ]);
     });
   },
-  printBitmap: function (base64Data, width, height) {
-    return new Promise(function (resolve, reject) {
-      exec(resolve, reject, "Printer", "printBitmap", [
-        base64Data,
-        width,
-        height,
-      ]);
-    });
+  printRawText: function (base64Data, width, height, success, error) {
+    // return new Promise(function (resolve, reject) {
+    exec(success, error, "Printer", "printRawText", [
+      base64Data,
+      width,
+      height,
+    ]);
+    // });
   },
   printBarCode: function (barCodeData, symbology, width, height, textPosition) {
     return new Promise(function (resolve, reject) {
@@ -123,8 +123,8 @@ module.exports = {
   },
   printerStatusStopListener: function () {
     exec(
-      function () {},
-      function () {},
+      function () { },
+      function () { },
       "Printer",
       "printerStatusStopListener",
       []
